@@ -255,13 +255,13 @@ namespace _10._02._25
         static void Task9()
         {
             Console.Clear();
-            Console.Write("Введите страну: ");
+            Console.Write("Введите ID покупателя, акции страны которого хотите получить: ");
             string country = Console.ReadLine();
             using (IDbConnection db = new SqlConnection(connectionString))
             {
-                var promos = db.Query<string>("SELECT * FROM Promotions WHERE Country = @Country", new { Country = country });
+                var promos = db.Query<Section>("SELECT Sections.Name, Sections.StartDate, Sections.EndDate FROM Sections INNER JOIN CustomerSections CS ON Sections.Id = CS.SectionId WHERE CS.CustomerId = @Country", new { Country = country });
                 foreach (var promo in promos)
-                    Console.WriteLine(promo);
+                    Console.WriteLine($"You have promotion on {promo.Name}: {promo.StartDate} - {promo.EndDate}");
             }
             Console.ReadKey();
         }
